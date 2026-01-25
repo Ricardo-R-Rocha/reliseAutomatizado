@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Registro de Ocorrência</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root { --primary: #1e293b; --accent: #10b981; --bg: #f1f5f9; --text: #334155; }
+body { margin: 0; font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); }
+header { background: var(--primary); color: white; padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.container { max-width: 800px; margin: 0 auto; padding: 15px; }
+.card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+form { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.full { grid-column: 1 / -1; }
+label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.85rem; color: #64748b; }
+input, select, textarea { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; box-sizing: border-box; transition: border-color 0.2s; }
+input:focus, textarea:focus { outline: none; border-color: var(--accent); }
+.chk-group { display: flex; align-items: center; gap: 8px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-top: 5px; }
+.chk-group input { width: auto; }
+button { grid-column: 1 / -1; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; transition: transform 0.1s; }
+button:active { transform: scale(0.98); }
+@media (max-width: 600px) { form { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header><h2><i class="fas fa-shield-halved"></i> REGISTRO OPERACIONAL</h2></header>
+<div class="container">
+<div class="card">
+<form id="formOcorrencia">
+<div><label>Pelotão</label><input type="text" name="pelotao" value="PETO" required></div>
+<div><label>Cidade</label>
+<select name="cidade">
+<option>Santo Estêvão</option><option>Ipecaetá</option><option>Antônio Cardoso</option><option>Anguera</option>
+</select>
+</div>
+<div class="full"><label>Tipo de Ocorrência</label><input type="text" name="tipo" placeholder="Ex: Tráfico de Entorpecentes" required></div>
+<div><label>Recurso(s)</label><input type="text" name="recurso" placeholder="VTR 9.5711"></div>
+<div><label>Endereço</label><input type="text" name="endereco" placeholder="Rua, Bairro"></div>
+<div><label>Acusado</label><input type="text" id="acusado" name="acusado" value="S/A">
+<div class="chk-group"><input type="checkbox" id="ni" onchange="document.getElementById('acusado').value = this.checked ? 'Não identificado' : 'S/A'"><label for="ni" style="margin:0">Não identificado</label></div>
+</div>
+<div><label>Vítima</label><input type="text" name="vitima" value="Sociedade"></div>
+<div><label>Data</label><input type="date" name="data" id="campoData"></div>
+<div><label>Horário</label><input type="text" name="horario" id="campoHora"></div>
+<div class="full"><label>N° da Ocorrência</label><input type="text" id="numOc" name="numeroOcorrencia" value="S/A">
+<div class="chk-group"><input type="checkbox" id="ocSA" onchange="const f = document.getElementById('numOc'); f.value = this.checked ? 'S/A' : ''; f.readOnly = this.checked" checked><label for="ocSA" style="margin:0">S/A (Sem número)</label></div>
+</div>
+<div class="full"><label>Resumo dos Fatos</label><textarea name="resumo" placeholder="Descreva a ação..."></textarea></div>
+<div class="full"><label>Providências</label><textarea name="providencias" placeholder="Encaminhamentos..."></textarea></div>
+<div class="full"><label>Fonte</label><input type="text" name="fonte" value="PETO 2 rodas"></div>
+<button type="submit"><i class="fas fa-eye"></i> GERAR PRÉ-VISUALIZAÇÃO</button>
+</form>
+</div>
+</div>
+<script src="script.js"></script>
+<script>
+window.onload = () => {
+const agora = new Date();
+document.getElementById('campoData').value = agora.toISOString().split('T')[0];
+document.getElementById('campoHora').value = `${agora.getHours()}h${agora.getMinutes().toString().padStart(2,'0')}min`;
+};
+if ("serviceWorker" in navigator) { navigator.serviceWorker.register("./sw.js"); }
+</script>
+</body>
+</html>

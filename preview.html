@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Confirmar Envio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+body { font-family: 'Segoe UI', sans-serif; background: #f1f5f9; padding: 15px; margin: 0; }
+.card { background: white; padding: 20px; border-radius: 16px; max-width: 600px; margin: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+textarea { width: 100%; min-height: 450px; border-radius: 8px; border: 1px solid #cbd5e1; padding: 15px; font-family: monospace; font-size: 14px; box-sizing: border-box; background: #f8fafc; line-height: 1.5; }
+.actions { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+button { padding: 16px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; color: white; font-size: 1rem; }
+.btn-wa { background: #25D366; }
+.btn-copy { background: #3b82f6; }
+.btn-back { background: #64748b; }
+</style>
+</head>
+<body>
+<div class="card">
+<h3><i class="fas fa-file-signature"></i> Revisão Final</h3>
+<textarea id="output"></textarea>
+<div class="actions">
+<button class="btn-wa" onclick="enviar()"><i class="fab fa-whatsapp"></i> ENVIAR WHATSAPP</button>
+<button class="btn-copy" onclick="copiar()"><i class="fas fa-copy"></i> COPIAR TEXTO</button>
+<button class="btn-back" onclick="window.history.back()"><i class="fas fa-arrow-left"></i> VOLTAR E EDITAR</button>
+</div>
+</div>
+<script>
+const d = JSON.parse(localStorage.getItem("ocorrencia"));
+const dataBR = d.data.split('-').reverse().join('/');
+const msg = `*🚨PMBA/CPR-LESTE/57°CIPM/${d.cidade.toUpperCase()} - _${d.pelotao}_ - _${d.cidade.toUpperCase()}_🚨*
+
+*TIPO DE OCORRÊNCIA:* ${d.tipo}
+
+*RECURSO(S)*: ${d.recurso}
+
+*ACUSADO:* ${d.acusado}
+
+*VITIMA:* ${d.vitima}
+
+*UNIDADE*: 57ª CIPM
+
+*ENDEREÇO:* ${d.endereco}
+
+*CIDADE*: ${d.cidade}
+
+*DATA:* ${dataBR}
+
+*HORÁRIO:* ${d.horario}
+
+*RESUMO*:
+${d.resumo}
+
+*PROVIDÊNCIAS:*
+${d.providencias}
+
+*N° Ocorrência:* ${d.numeroOcorrencia}
+
+*FONTE*: ${d.fonte}`;
+
+document.getElementById("output").value = msg;
+function enviar() { window.open(`https://wa.me/?text=${encodeURIComponent(document.getElementById("output").value)}`, "_blank"); }
+function copiar() { const o = document.getElementById("output"); o.select(); navigator.clipboard.writeText(o.value); alert("Copiado!"); }
+</script>
+</body>
+</html>
