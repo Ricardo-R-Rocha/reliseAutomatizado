@@ -19,8 +19,7 @@ input, select, textarea { width: 100%; padding: 12px; border: 2px solid #e2e8f0;
 input:focus, textarea:focus { outline: none; border-color: var(--accent); }
 .chk-group { display: flex; align-items: center; gap: 8px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-top: 5px; }
 .chk-group input { width: auto; }
-button { grid-column: 1 / -1; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; transition: transform 0.1s; }
-button:active { transform: scale(0.98); }
+button { grid-column: 1 / -1; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
 @media (max-width: 600px) { form { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -29,7 +28,7 @@ button:active { transform: scale(0.98); }
 <div class="container">
 <div class="card">
 <form id="formOcorrencia">
-<div><label>Pelotão</label><input type="text" name="pelotao" value="PETO" required></div>
+<div><label>Pelotão</label><input type="text" name="pelotao" placeholder="Ex: PETO / 1° Pel" required></div>
 <div><label>Cidade</label>
 <select name="cidade">
 <option>Santo Estêvão</option><option>Ipecaetá</option><option>Antônio Cardoso</option><option>Anguera</option>
@@ -43,7 +42,7 @@ button:active { transform: scale(0.98); }
 </div>
 <div><label>Vítima</label><input type="text" name="vitima" value="Sociedade"></div>
 <div><label>Data</label><input type="date" name="data" id="campoData"></div>
-<div><label>Horário</label><input type="text" name="horario" id="campoHora"></div>
+<div><label>Horário</label><input type="time" name="horario" id="campoHora" required></div>
 <div class="full"><label>N° da Ocorrência</label><input type="text" id="numOc" name="numeroOcorrencia" value="S/A">
 <div class="chk-group"><input type="checkbox" id="ocSA" onchange="const f = document.getElementById('numOc'); f.value = this.checked ? 'S/A' : ''; f.readOnly = this.checked" checked><label for="ocSA" style="margin:0">S/A (Sem número)</label></div>
 </div>
@@ -59,7 +58,9 @@ button:active { transform: scale(0.98); }
 window.onload = () => {
 const agora = new Date();
 document.getElementById('campoData').value = agora.toISOString().split('T')[0];
-document.getElementById('campoHora').value = `${agora.getHours()}h${agora.getMinutes().toString().padStart(2,'0')}min`;
+const h = agora.getHours().toString().padStart(2, '0');
+const m = agora.getMinutes().toString().padStart(2, '0');
+document.getElementById('campoHora').value = `${h}:${m}`;
 };
 if ("serviceWorker" in navigator) { navigator.serviceWorker.register("./sw.js"); }
 </script>
