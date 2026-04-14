@@ -3,7 +3,7 @@ e.preventDefault();
 const formData = new FormData(this);
 const dados = Object.fromEntries(formData.entries());
 
-// Captura direta para garantir campos marcados como readonly/disabled
+// Garante a captura dos campos com lógica especial
 dados.acusado = document.getElementById("acusado").value;
 dados.numeroOcorrencia = document.getElementById("numOc").value;
 

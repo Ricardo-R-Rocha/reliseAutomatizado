@@ -15,7 +15,7 @@ header { background: var(--primary); color: white; padding: 20px; text-align: ce
 form { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 .full { grid-column: 1 / -1; }
 label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.85rem; color: #64748b; }
-input, select, textarea { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; box-sizing: border-box; transition: border-color 0.2s; }
+input, select, textarea { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
 input:focus, textarea:focus { outline: none; border-color: var(--accent); }
 .chk-group { display: flex; align-items: center; gap: 8px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-top: 5px; }
 .chk-group input { width: auto; }
@@ -28,41 +28,86 @@ button { grid-column: 1 / -1; background: var(--accent); color: white; border: n
 <div class="container">
 <div class="card">
 <form id="formOcorrencia">
-<div><label>Pelotão</label><input type="text" name="pelotao" placeholder="Ex: PETO / 1° Pel" required></div>
-<div><label>Cidade</label>
-<select name="cidade">
-<option>Santo Estêvão</option><option>Ipecaetá</option><option>Antônio Cardoso</option><option>Anguera</option>
+<div><label>Pelotão/Companhia</label><input type="text" name="pelotao" placeholder="Ex: Ceto / 1° Pel" required></div>
+
+<div><label>UOPM (CIPM/BPM)</label>
+<select name="unidadePrincipal" id="selectUnidade" onchange="atualizarUnidade()">
+<option value="57ª CIPM">57ª CIPM</option>
+<option value="67ª CIPM">67ª CIPM</option>
+<option value="25º BPM">25º BPM</option>
 </select>
 </div>
+
+<div class="full"><label>Região</label>
+<input type="text" name="regiao" value="Maria Quitéria">
+</div>
+
+<div><label>Cidade</label>
+<select name="cidade" id="selectCidade">
+</select>
+</div>
+
 <div class="full"><label>Tipo de Ocorrência</label><input type="text" name="tipo" placeholder="Ex: Tráfico de Entorpecentes" required></div>
-<div><label>Recurso(s)</label><input type="text" name="recurso" placeholder="VTR 9.5711"></div>
+<div class="full"><label>Resumo dos Fatos</label><textarea name="resumo" placeholder="Descreva a ação..."></textarea></div>
+<div class="full"><label>Providências</label><textarea name="providencias" placeholder="Encaminhamentos..."></textarea></div>
+
+<div><label>Recurso(s)</label><input type="text" name="recurso" placeholder="VTR"></div>
 <div><label>Endereço</label><input type="text" name="endereco" placeholder="Rua, Bairro"></div>
 <div><label>Acusado</label><input type="text" id="acusado" name="acusado" value="S/A">
 <div class="chk-group"><input type="checkbox" id="ni" onchange="document.getElementById('acusado').value = this.checked ? 'Não identificado' : 'S/A'"><label for="ni" style="margin:0">Não identificado</label></div>
 </div>
 <div><label>Vítima</label><input type="text" name="vitima" value="Sociedade"></div>
+
+<div><label>Unidade</label>
+<select name="unidadeRelatorio">
+<option value="57ª CIPM">57ª CIPM</option>
+<option value="67ª CIPM">67ª CIPM</option>
+<option value="25º BPM">25º BPM</option>
+</select>
+</div>
+
 <div><label>Data</label><input type="date" name="data" id="campoData"></div>
 <div><label>Horário</label><input type="time" name="horario" id="campoHora" required></div>
-<div class="full"><label>N° da Ocorrência</label><input type="text" id="numOc" name="numeroOcorrencia" value="S/A">
+
+<div class="full"><label>N° BO</label><input type="text" id="numOc" name="numeroOcorrencia" value="S/A">
 <div class="chk-group"><input type="checkbox" id="ocSA" onchange="const f = document.getElementById('numOc'); f.value = this.checked ? 'S/A' : ''; f.readOnly = this.checked" checked><label for="ocSA" style="margin:0">S/A (Sem número)</label></div>
 </div>
-<div class="full"><label>Resumo dos Fatos</label><textarea name="resumo" placeholder="Descreva a ação..."></textarea></div>
-<div class="full"><label>Providências</label><textarea name="providencias" placeholder="Encaminhamentos..."></textarea></div>
-<div class="full"><label>Fonte</label><input type="text" name="fonte" value="PETO 2 rodas"></div>
+
+<div class="full"><label>Fonte</label><input type="text" name="fonte" value="PETO"></div>
 <button type="submit"><i class="fas fa-eye"></i> GERAR PRÉ-VISUALIZAÇÃO</button>
 </form>
 </div>
 </div>
+
 <script src="script.js"></script>
 <script>
+const cidadesPorUnidade = {
+"57ª CIPM": ["Santo Estêvão", "Ipecaetá", "Antônio Cardoso", "Anguera"],
+"67ª CIPM": ["Feira de Santana", "São Gonçalo dos Campos", "Conceição da Feira"],
+"25º BPM": ["Feira de Santana"]
+};
+
+function atualizarUnidade() {
+const unidade = document.getElementById('selectUnidade').value;
+const selectCidade = document.getElementById('selectCidade');
+
+selectCidade.innerHTML = "";
+cidadesPorUnidade[unidade].forEach(cidade => {
+const opt = document.createElement('option');
+opt.value = cidade;
+opt.innerHTML = cidade;
+selectCidade.appendChild(opt);
+});
+}
+
 window.onload = () => {
 const agora = new Date();
 document.getElementById('campoData').value = agora.toISOString().split('T')[0];
 const h = agora.getHours().toString().padStart(2, '0');
 const m = agora.getMinutes().toString().padStart(2, '0');
 document.getElementById('campoHora').value = `${h}:${m}`;
+atualizarUnidade();
 };
-if ("serviceWorker" in navigator) { navigator.serviceWorker.register("./sw.js"); }
 </script>
 </body>
 </html>
